@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#123c2c">
+<title>FaceFinder — Tìm ảnh tương tự</title>
+<style>
+:root{--green:#176b48;--dark:#123c2c;--mint:#eaf5ee;--ink:#17231d;--muted:#66756c;--line:#dce7df}
+*{box-sizing:border-box}body{margin:0;background:#f5f8f5;color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+header{background:linear-gradient(120deg,#123c2c,#20734d);color:white;padding:22px 18px}
+.wrap{max-width:900px;margin:auto}header .brand{font-size:25px;font-weight:800;letter-spacing:.2px}header p{margin:4px 0 0;color:#e0eee5}
+main{padding:24px 16px 48px}.card{background:white;border:1px solid var(--line);border-radius:18px;padding:20px;margin:0 0 16px;box-shadow:0 5px 20px #173d2410}
+h1{font-size:24px;margin:0 0 6px}h2{font-size:18px;margin:0 0 12px}.muted{color:var(--muted);font-size:14px}
+.drop{border:2px dashed #9cbdaa;border-radius:14px;background:#fbfdfb;padding:24px;text-align:center;cursor:pointer;transition:.15s}
+.drop:hover,.drop.drag{border-color:var(--green);background:var(--mint)}.drop strong{display:block;margin:6px 0}
+input[type=file]{display:none}.btn{border:0;border-radius:10px;background:var(--green);color:#fff;padding:11px 16px;font-weight:700;cursor:pointer;font-size:14px}.btn.secondary{background:#edf4ef;color:var(--dark);border:1px solid var(--line)}.btn:disabled{opacity:.45;cursor:not-allowed}
+.preview{display:none;margin-top:16px;gap:14px;align-items:center}.preview img{width:130px;height:130px;object-fit:contain;background:#f0f3f0;border-radius:12px;border:1px solid var(--line)}
+.actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:14px}.action{border:1px solid var(--line);border-radius:12px;padding:13px;display:flex;flex-direction:column;gap:7px}.action strong{font-size:15px}.action p{margin:0;color:var(--muted);font-size:13px;flex:1}
+.notice{background:#fff8e7;border:1px solid #f0dda7;border-radius:12px;padding:12px 14px;color:#59491e;font-size:13px}
+.steps{padding-left:20px;margin:8px 0}.steps li{margin:5px 0}.foot{text-align:center;color:var(--muted);font-size:12px;padding:8px}
+@media(max-width:520px){.card{padding:16px}header{padding:18px 16px}.preview{align-items:flex-start}.preview img{width:100px;height:100px}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="brand">⌕ FaceFinder</div><p>Tìm ảnh tương tự trên Internet</p></div></header>
+<main class="wrap">
+<section class="card">
+<h1>Tìm kiếm bằng hình ảnh</h1>
+<p class="muted">Chọn ảnh từ thiết bị. Ảnh được xem trước ngay trên trình duyệt; trang này không tải ảnh lên máy chủ.</p>
+<label class="drop" id="drop" for="file">
+  <div style="font-size:34px">▧</div><strong>Kéo thả ảnh vào đây</strong>
+  <span class="muted">hoặc nhấn để chọn ảnh (JPG, PNG, WEBP; tối đa 15 MB)</span>
+</label>
+<input id="file" type="file" accept="image/jpeg,image/png,image/webp">
+<div class="preview" id="preview"><img id="thumb" alt="Ảnh đã chọn"><div><strong id="filename"></strong><p class="muted" id="filesize"></p><button class="btn secondary" id="remove" type="button">Xóa ảnh</button></div></div>
+<div class="notice" style="margin-top:16px">Để tìm ảnh, bạn sẽ mở công cụ của nền tảng và tự tải ảnh lên đó. Website không tự truy cập tài khoản hoặc dữ liệu riêng tư.</div>
+</section>
+<section class="card">
+<h2>Mở công cụ tìm kiếm</h2>
+<p class="muted">Chọn một công cụ. Với Google Lens, hãy tải ảnh vừa chọn lên sau khi trang mở ra.</p>
+<div class="actions">
+<div class="action"><strong>Google Lens</strong><p>Tìm hình ảnh giống hoặc có liên quan trên web.</p><button class="btn" data-url="https://lens.google.com/">Mở Google Lens ↗</button></div>
+<div class="action"><strong>Google Hình ảnh</strong><p>Tìm ảnh bằng từ khóa hoặc chuyển sang tìm bằng hình ảnh.</p><button class="btn" data-url="https://images.google.com/">Mở Google Images ↗</button></div>
+<div class="action"><strong>Facebook</strong><p>Tìm bài viết công khai bằng từ khóa; không hỗ trợ tìm mọi khuôn mặt bằng ảnh.</p><button class="btn" data-url="https://www.facebook.com/search/">Mở tìm kiếm ↗</button></div>
+<div class="action"><strong>Instagram</strong><p>Tìm tài khoản, hashtag và nội dung công khai bằng từ khóa.</p><button class="btn" data-url="https://www.instagram.com/">Mở Instagram ↗</button></div>
+<div class="action"><strong>TikTok</strong><p>Tìm video và tài khoản công khai bằng từ khóa.</p><button class="btn" data-url="https://www.tiktok.com/search">Mở TikTok ↗</button></div>
+</div>
+</section>
+<section class="card">
+<h2>Cách sử dụng</h2>
+<ol class="steps"><li>Chọn ảnh rõ nét, tốt nhất là ảnh có chủ thể nổi bật.</li><li>Nhấn <b>Mở Google Lens</b>, sau đó tải ảnh lên trong Google Lens.</li><li>Xem các kết quả tương tự và mở những trang có liên quan.</li><li>Với Facebook, Instagram và TikTok, dùng tên, biệt danh hoặc thông tin công khai để tìm tiếp.</li></ol>
+</section>
+<p class="foot">FaceFinder là công cụ hỗ trợ mở dịch vụ tìm kiếm bên ngoài, không liên kết hay được bảo trợ bởi Google, Meta hoặc TikTok.</p>
+</main>
+<script>
+const file=document.getElementById('file'),drop=document.getElementById('drop'),preview=document.getElementById('preview'),thumb=document.getElementById('thumb');
+let objectUrl=null;
+function setFile(f){
+ if(!f)return;
+ if(!['image/jpeg','image/png','image/webp'].includes(f.type)){alert('Vui lòng chọn ảnh JPG, PNG hoặc WEBP.');return}
+ if(f.size>15*1024*1024){alert('Ảnh vượt quá 15 MB.');return}
+ if(objectUrl)URL.revokeObjectURL(objectUrl);
+ objectUrl=URL.createObjectURL(f);thumb.src=objectUrl;
+ document.getElementById('filename').textContent=f.name;
+ document.getElementById('filesize').textContent=(f.size/1024/1024).toFixed(2)+' MB';
+ preview.style.display='flex';
+}
+file.addEventListener('change',e=>setFile(e.target.files[0]));
+['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('drag')}));
+['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('drag')}));
+drop.addEventListener('drop',e=>setFile(e.dataTransfer.files[0]));
+document.getElementById('remove').addEventListener('click',()=>{if(objectUrl)URL.revokeObjectURL(objectUrl);objectUrl=null;thumb.removeAttribute('src');file.value='';preview.style.display='none'});
+document.querySelectorAll('[data-url]').forEach(b=>b.addEventListener('click',()=>window.open(b.dataset.url,'_blank','noopener,noreferrer')));
+</script>
+</body>
+</html>
